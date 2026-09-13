@@ -1,0 +1,48 @@
+
+import { betterAuth } from "better-auth";
+import { prisma } from "./prisma";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { UserRole, UserStatus } from "../../generated/prisma/enums";
+
+
+const auth = betterAuth({
+    database: prismaAdapter(prisma, {
+        provider: "postgresql", 
+    }),
+
+    emailAndPassword: {
+        enabled: true,
+    },
+
+    user: {
+        additionalFields: {
+            role: {
+                type: 'string',
+                required: true,
+                defaultValue: UserRole.PATIENT
+            },
+            status: {
+                type: "string",
+                required: true,
+                defaultValue: UserStatus.ACTIVE
+            },
+            needPasswordChange: {
+                type: "boolean",
+                required: true,
+                defaultValue: false,
+            },
+            isDeleted: {
+                type: "boolean",
+                required: true,
+                defaultValue: false,
+            },
+            deletedAt: {
+                type: "date",
+                required: false,
+                defaultValue: null,
+            },
+        }
+    }
+});
+
+export default auth;

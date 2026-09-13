@@ -3,6 +3,10 @@ import { specialityController } from "./sepeciality.controller";
 
 const router = Router()
 
-router.post('/speciality', specialityController.createSpeciality)
+router.post('/', specialityController.createSpeciality)
+
+router.get('/', specialityController.getallSpeciality)
+
+router.patch('/:id', specialityController.updateSpeciality)
 
 export const specialityRouter = router
