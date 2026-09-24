@@ -1,0 +1,21 @@
+model Appointment {
+  id               String            @id @default(uuid(7))
+  patientId        String
+  doctorId         String
+  doctorScheduleId String            @unique
+  videoCallingId   String
+  status           AppointmentStatus @default(SCHEDULED)
+  paymentStatus    PaymentStatus     @default(UNPAID)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  doctor           Doctor            @relation(fields: [doctorId], references: [id])
+  doctor_schedules DoctorSchedules   @relation(fields: [doctorScheduleId], references: [id])
+  patient          Patient           @relation(fields: [patientId], references: [id])
+
+  medical_reports  MedicalReport?
+  review           Review?
+  precription Prescription?
+
+
+  @@map("appointments")
+}

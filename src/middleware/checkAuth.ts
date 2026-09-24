@@ -10,7 +10,7 @@ import { JwtUtils } from "../utils/jwt";
 
 export const checkAuth = (...authRole: UserRole[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log(authRole.length);
+
         // session token varification
         const sessionToken = cookieUtils.getCookie(req, "better-auth.session_token")
 
@@ -60,6 +60,13 @@ export const checkAuth = (...authRole: UserRole[]) => async (req: Request, res: 
 
                 if (authRole.length > 0 && !authRole.includes(user?.role)) {
                     throw new AppError(status.FORBIDDEN, "forbidden access! you do not have permission to access this resources")
+                }
+
+
+                req.user = {
+                    userId: user?.id,
+                    email: user?.email,
+                    role: user?.role
                 }
             }
         }

@@ -16,6 +16,18 @@ interface EnvConfig {
     REFRESH_TOKEN_EXPIRE_IN: string
     BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN: string
     BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE: string
+    SEND_EMAIL: {
+        SEND_EMAIL_SMTP_USER: string
+        SEND_EMAIL_SMTP_PASS: string
+        SEND_EMAIL_SMTP_HOST: string
+        SEND_EMAIL_SMTP_PORT: string
+        SEND_EMAIL_SMTP_FROM: string
+    }
+    GOOGLE_CLIENT_ID: string
+    GOOGLE_CLIENT_SECRET: string
+
+    CALLBACK_URL: string
+    FRONTEND_URL: string
 }
 
 
@@ -32,7 +44,16 @@ const loadEnvVariables = (): EnvConfig => {
         "ACCESS_TOKEN_EXPIRE_IN",
         "REFRESH_TOKEN_EXPIRE_IN",
         "BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN",
-        "BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE"
+        "BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE",
+        "SEND_EMAIL_SMTP_USER",
+        "SEND_EMAIL_SMTP_PASS",
+        "SEND_EMAIL_SMTP_HOST",
+        "SEND_EMAIL_SMTP_PORT",
+        "SEND_EMAIL_SMTP_FROM",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "CALLBACK_URL",
+        "FRONTEND_URL"
     ]
 
 
@@ -54,7 +75,18 @@ const loadEnvVariables = (): EnvConfig => {
         ACCESS_TOKEN_EXPIRE_IN: process.env.ACCESS_TOKEN_EXPIRE_IN as string,
         REFRESH_TOKEN_EXPIRE_IN: process.env.REFRESH_TOKEN_EXPIRE_IN as string,
         BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN: process.env.BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN as string,
-        BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE: process.env.BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE as string
+        BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE: process.env.BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE as string,
+        SEND_EMAIL: {
+            SEND_EMAIL_SMTP_USER: process.env.SEND_EMAIL_SMTP_USER as string,
+            SEND_EMAIL_SMTP_PASS: process.env.SEND_EMAIL_SMTP_PASS as string,
+            SEND_EMAIL_SMTP_HOST: process.env.SEND_EMAIL_SMTP_HOST as string,
+            SEND_EMAIL_SMTP_PORT: process.env.SEND_EMAIL_SMTP_PORT as string,
+            SEND_EMAIL_SMTP_FROM: process.env.SEND_EMAIL_SMTP_USER as string
+        },
+        GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
+        GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
+        CALLBACK_URL: process.env.CALLBACK_URL as string,
+        FRONTEND_URL: process.env.FRONTEND_URL as string,
     }
 }
 

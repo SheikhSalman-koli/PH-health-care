@@ -3,15 +3,29 @@ import { betterAuth } from "better-auth";
 import { prisma } from "./prisma";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { UserRole, UserStatus } from "../../generated/prisma/enums";
+import { bearer, emailOTP } from "better-auth/plugins";
+import { sendEmail } from "../../utils/email";
+import { envVars } from "../../config/env";
 
 
 const auth = betterAuth({
+
+    baseURL: envVars.BETTER_AUTH_URL,
+    secret: envVars.BETTER_AUTH_SECRET,
+
     database: prismaAdapter(prisma, {
-        provider: "postgresql", 
+        provider: "postgresql",
     }),
 
     emailAndPassword: {
         enabled: true,
+        requireEmailVerification: true
+    },
+
+    emailVerification: {
+        sendOnSignUp: true,
+        sendOnSignIn: true,
+        autoSignInAfterVerification: true
     },
 
     user: {
@@ -44,12 +58,111 @@ const auth = betterAuth({
         }
     },
 
+    socialProviders: {
+        google: {
+            clientId: envVars.GOOGLE_CLIENT_ID,
+            clientSecret: envVars.GOOGLE_CLIENT_SECRET,
+
+            mapProfileToUser: () => {
+                return {
+                    role: UserRole.PATIENT,
+                    status: UserStatus.ACTIVE,
+                    needPasswordChange: false,
+                    emailVerified: true,
+                    isDeleted: false,
+                    deletedAt: null,
+
+                }
+            },
+
+        },
+
+    },
+
+    redirectURLs: {
+        singIn: `${envVars.BETTER_AUTH_URL}/api/v1/auth/google-success`
+    },
+    
+    trustedOrigins: [envVars.FRONTEND_URL, envVars.BETTER_AUTH_URL],
+
+    plugins: [
+        bearer(),
+        emailOTP({
+            overrideDefaultEmailVerification: true,
+            async sendVerificationOTP({ email, otp, type }) {
+                if (type === "email-verification") {
+
+                    const user = await prisma.user.findUnique({
+                        where: {
+                            email: email
+                        }
+                    })
+
+                    if (user && !user?.emailVerified) {
+                        sendEmail({
+                            to: email,
+                            subject: "Verify your email",
+                            templeteName: "otp",
+                            templeteData: {
+                                name: user?.name,
+                                otp,
+                            }
+                        })
+                    }
+                } else if (type === "forget-password") {
+                    const user = await prisma.user.findUnique({
+                        where: {
+                            email
+                        }
+                    })
+
+                    if (user) {
+                        sendEmail({
+                            to: email,
+                            subject: "Password Reset OTP",
+                            templeteName: "otp",
+                            templeteData: {
+                                name: user?.name,
+                                otp,
+                            }
+                        })
+                    }
+                }
+
+            },
+            expiresIn: 5 * 60,
+            otpLength: 4
+        })
+    ],
+
     session: {
-        expiresIn: 60 * 60 * 60 * 24,
-        updateAge: 60 * 60 * 60 * 24,
+        expiresIn: 60 * 60 * 24,
+        updateAge: 60 * 60 * 24,
         cookieCache: {
             enabled: true,
-            maxAge: 60 * 60 * 60 * 24,
+            maxAge: 60 * 60 * 24,
+        }
+    },
+
+    advanced: {
+        useSecureCookies: false,
+        cookies: {
+            stats: {
+                attributes: {
+                    sameSite: "none",
+                    secure: true,
+                    httpOnly: true,
+                    path: '/'
+                }
+            },
+            sessionToken: {
+                attributes: {
+                    sameSite: "none",
+                    secure: true,
+                    httpOnly: true,
+                    path: '/'
+                }
+            }
         }
     }
 });

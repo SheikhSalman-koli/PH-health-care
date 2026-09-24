@@ -39,6 +39,8 @@ const updateDoctor = catchAsync(
 
         const {id} = req.params
         const payload = req.body
+
+        // console.log("doctor body",payload);
         const result = await doctorServices.updateDoctor(id as string, payload)
 
         sendResponse(res, {

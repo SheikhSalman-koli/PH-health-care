@@ -1,0 +1,16 @@
+model MedicalReport {
+  id            String      @id @default(uuid(7))
+  patientId     String
+  doctorId      String
+  appointmentId String      @unique
+  diagnosis     String
+  treatment     String
+  followUpDate  DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  appointments  Appointment @relation(fields: [appointmentId], references: [id])
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
+  patient       Patient     @relation(fields: [patientId], references: [id])
+
+  @@map("medical_reports")
+}
