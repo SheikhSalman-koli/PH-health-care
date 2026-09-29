@@ -7,11 +7,23 @@ import z from "zod";
 import { TErroResponse, TErrorSoures } from "../errorHelper/error.interface";
 import { handleZodError } from "../errorHelper/handleZodErr";
 import AppError from "../errorHelper/AppError";
+import { deleteImageFromCloudinary } from "../config/cloudinary.config";
 
-export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const globalErrorHandler =async (err: any, req: Request, res: Response, next: NextFunction) => {
 
     if (envVars.NODE_ENV === "development") {
         console.log(err);
+    }
+
+    if(req.file){
+        await deleteImageFromCloudinary(req.file.path)
+    }
+
+    if(req.files && Array.isArray(req.files) && req.files.length > 0){
+
+        const urls = req.files.map((file) => file.path)
+
+        await Promise.all(urls.map((url)=>deleteImageFromCloudinary(url)))
     }
 
     let errorSoures: TErrorSoures[] = []

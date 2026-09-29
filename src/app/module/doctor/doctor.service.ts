@@ -4,23 +4,45 @@ import AppError from "../../../errorHelper/AppError"
 import { prisma } from "../../lib/prisma"
 import { IUpdateDoctorPayload } from "./doctor.interface"
 import { UserStatus } from "../../../generated/prisma/enums"
+import { QueryBuilder } from "../../../utils/QueryBuilder"
+import { IQueryParams } from "../../interface/query.builder"
+import { doctorFilterableFields, doctorIncludeConfig, doctorSearchableFields } from "./doctor.constant"
 
-const getAllDoctors = async () => {
-    const result = await prisma.doctor.findMany({
-        where: {
-            isDeleted: false
-        },
-        include: {
-            user: true,
+const getAllDoctors = async (query: IQueryParams) => {
+   
+    const queryBuilder = new QueryBuilder(
+        prisma.doctor,
+        query,
+          {
+            searchableFields: doctorSearchableFields,
+            filterableFields: doctorFilterableFields,
+        }
+    )
+
+    const result = await queryBuilder
+        .search()
+        .filter()
+        .where({
+            isDeleted: false,
+        })
+        .include({
+            // user: true,
+            // specialities: true,
             specialities: {
-                include: {
+                include:{
                     speciality: true
                 }
-            }
-        }
-    })
+            },
+        })
+        .dynamicInclude(doctorIncludeConfig)
+        .pagination()
+        .sort()
+        .fields()
+        .execute();
 
-    return result
+        // console.log(result);
+    return result;
+
 }
 
 const getDoctorById = async (id: string) => {
@@ -29,6 +51,7 @@ const getDoctorById = async (id: string) => {
             id,
             isDeleted: false
         },
+        
         include: {
             user: true,
             specialities: {
@@ -38,6 +61,7 @@ const getDoctorById = async (id: string) => {
             },
 
         }
+        
     })
 
     return result

@@ -6,14 +6,15 @@ import status from "http-status"
 
 const getAllDoctor = catchAsync(
     async(req: Request, res: Response)=> {
-
-        const result = await doctorServices.getAllDoctors()
+const query = req.query
+        const result = await doctorServices.getAllDoctors(query)
 
         sendResponse(res, {
             httpStatusCode: status.OK,
             success: true,
             message: "doctor fetched successfully!",
-            data: result
+            data: result?.data,
+            meta: result?.meta
         })
     }
 )

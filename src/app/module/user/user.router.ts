@@ -9,7 +9,7 @@ const router = Router()
 
 router.post(
     '/create-doctor', 
-    checkAuth(UserRole.ADMIN, UserRole.SUPERADMIN) , 
+    // checkAuth(UserRole.ADMIN, UserRole.SUPERADMIN) , 
     requestValidation(userValidation.createDoctorZodSchema), 
     userController.createDoctor
 )

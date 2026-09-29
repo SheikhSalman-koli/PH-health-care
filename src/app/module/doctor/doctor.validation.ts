@@ -17,7 +17,7 @@ export const updateDoctorZodSchema = z.object({
         designation: z.string("Designation must be string").min(2, "Designation must be at least 2 characters").max(50, "Designation must be at most 50 characters").optional(),
     }).optional(),
     specialities : z.array(z.object({
-        specialityId: z.uuid("Specialty ID must be a valid UUID"),
+        specialityId: z.uuid("Speciality ID must be a valid UUID"),
         shouldDelete: z.boolean("shouldDelete must be a boolean").optional(),
     })).optional()
 })

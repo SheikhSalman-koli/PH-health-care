@@ -28,6 +28,12 @@ interface EnvConfig {
 
     CALLBACK_URL: string
     FRONTEND_URL: string
+
+    CLOUDINARY: {
+        CLOUD_NAME: string;
+        CLOUD_SECRET: string;
+        CLOUD_API: string;
+    }
 }
 
 
@@ -53,7 +59,10 @@ const loadEnvVariables = (): EnvConfig => {
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
         "CALLBACK_URL",
-        "FRONTEND_URL"
+        "FRONTEND_URL",
+        "CLOUD_NAME",
+        "CLOUD_SECRET",
+        "CLOUD_API"
     ]
 
 
@@ -87,6 +96,12 @@ const loadEnvVariables = (): EnvConfig => {
         GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
         CALLBACK_URL: process.env.CALLBACK_URL as string,
         FRONTEND_URL: process.env.FRONTEND_URL as string,
+
+        CLOUDINARY: {
+            CLOUD_NAME: process.env.CLOUD_NAME as string,
+            CLOUD_SECRET: process.env.CLOUD_SECRET as string,
+            CLOUD_API: process.env.CLOUD_API as string
+        }
     }
 }
 
