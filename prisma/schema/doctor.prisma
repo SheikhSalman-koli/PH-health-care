@@ -22,7 +22,7 @@ model Doctor {
   user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   doctorSchedule      DoctorSchedules[]
   specialities        DoctorSpeciality[]
-  medical_reports     MedicalReport[]
+
   reviews             Review[]
   prescriptions       Prescription[]
 

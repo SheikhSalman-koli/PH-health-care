@@ -33,7 +33,13 @@ interface EnvConfig {
         CLOUD_NAME: string;
         CLOUD_SECRET: string;
         CLOUD_API: string;
+    }//STRIPE_SECRET_KEY
+    STRIPE:{
+        STRIPE_SECRET_KEY: string;
+        STRIPE_WEBHOOK_SECRET: string;
     }
+    SUPAR_ADMIN_EMAIL: string;
+    SUPAR_ADMIN_PASSWORD: string;
 }
 
 
@@ -62,7 +68,11 @@ const loadEnvVariables = (): EnvConfig => {
         "FRONTEND_URL",
         "CLOUD_NAME",
         "CLOUD_SECRET",
-        "CLOUD_API"
+        "CLOUD_API",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET",
+        "SUPAR_ADMIN_EMAIL",
+        "SUPAR_ADMIN_PASSWORD"
     ]
 
 
@@ -101,7 +111,14 @@ const loadEnvVariables = (): EnvConfig => {
             CLOUD_NAME: process.env.CLOUD_NAME as string,
             CLOUD_SECRET: process.env.CLOUD_SECRET as string,
             CLOUD_API: process.env.CLOUD_API as string
-        }
+        },
+
+        STRIPE: {
+            STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
+            STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string
+        },
+        SUPAR_ADMIN_EMAIL: process.env.SUPAR_ADMIN_EMAIL as string,
+        SUPAR_ADMIN_PASSWORD: process.env.SUPAR_ADMIN_PASSWORD as string
     }
 }
 

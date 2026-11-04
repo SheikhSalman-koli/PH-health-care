@@ -82,7 +82,7 @@ const auth = betterAuth({
     redirectURLs: {
         singIn: `${envVars.BETTER_AUTH_URL}/api/v1/auth/google-success`
     },
-    
+
     trustedOrigins: [envVars.FRONTEND_URL, envVars.BETTER_AUTH_URL],
 
     plugins: [
@@ -97,6 +97,16 @@ const auth = betterAuth({
                             email: email
                         }
                     })
+
+                    if (!user) {
+                        console.error(`User with email ${email} not found. Cannot send verification OTP.`);
+                        return;
+                    }
+
+                    if (user && user.role === UserRole.SUPERADMIN) {
+                        console.log(`User with email ${email} is a super admin. Skipping sending verification OTP.`);
+                        return;
+                    }
 
                     if (user && !user?.emailVerified) {
                         sendEmail({
